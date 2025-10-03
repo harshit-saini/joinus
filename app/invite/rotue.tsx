@@ -1,7 +1,7 @@
 // app/api/invite/route.ts
 import { NextResponse } from 'next/server';
-import dbConnect from '../../../../lib/mongoose';
-import Invite from '../../../../lib/models/Invite';
+import dbConnect from '../../lib/mongoose';
+import Invite from '../../lib/models/invite';
 
 
 export async function POST(req: Request) {
