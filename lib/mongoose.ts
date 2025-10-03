@@ -6,7 +6,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'YOUR_MONGODB_CONNECTION_STRING_H
 
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
 
@@ -17,22 +17,22 @@ let cached: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | 
 
 
 if (!cached.promise) {
-  const opts = {
-    // useNewUrlParser and useUnifiedTopology are default in mongoose >=6
-  };
-  cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-    return mongoose;
-  });
+const opts = {
+// useNewUrlParser and useUnifiedTopology are default in mongoose >=6
+};
+cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+return mongoose;
+});
 }
 
 
 async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-  cached.conn = await cached.promise;
-  (global as any).mongoose = cached;
-  return cached.conn;
+if (cached.conn) {
+return cached.conn;
+}
+cached.conn = await cached.promise;
+(global as any).mongoose = cached;
+return cached.conn;
 }
 
 
