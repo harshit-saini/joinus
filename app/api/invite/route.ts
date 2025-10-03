@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     await dbConnect();
-    const invite = await Invite.create(body);
+    const invite : any = await Invite.create(body);
 
     return NextResponse.json({ id: invite._id.toString() });
   } catch (err: any) {
