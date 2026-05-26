@@ -2,7 +2,10 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 import type { InviteAnalytics, InvitePayload } from "../invite-types";
 
-type InviteDocument = Omit<InvitePayload, "_id" | "createdAt" | "updatedAt" | "analytics"> & {
+type InviteDocument = Omit<
+  InvitePayload,
+  "_id" | "createdAt" | "updatedAt" | "analytics"
+> & {
   analytics: InviteAnalytics;
 };
 
@@ -21,7 +24,7 @@ const MediaAssetSchema = new Schema(
     role: { type: String, enum: ["card", "gallery"], default: "gallery" },
     dataUrl: { type: String, default: "" },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const GuestRecipientSchema = new Schema(
@@ -43,7 +46,7 @@ const GuestRecipientSchema = new Schema(
     lastOpenedAt: { type: String, default: "" },
     rsvp: { type: String, enum: ["yes", "no", "maybe", ""], default: "" },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const InviteSchema = new Schema(
@@ -92,7 +95,11 @@ const InviteSchema = new Schema(
     rsvpContact: { type: String, default: "" },
     registryLink: { type: String, default: "" },
     giftNote: { type: String, default: "" },
-    privacy: { type: String, enum: ["public", "unlisted"], default: "unlisted" },
+    privacy: {
+      type: String,
+      enum: ["public", "unlisted"],
+      default: "unlisted",
+    },
     cardAsset: { type: MediaAssetSchema, default: null },
     gallery: { type: [MediaAssetSchema], default: [] },
     guestList: { type: [GuestRecipientSchema], default: [] },
@@ -107,7 +114,7 @@ const InviteSchema = new Schema(
   {
     minimize: false,
     timestamps: true,
-  }
+  },
 );
 
 export default (mongoose.models.Invite as Model<IInvite>) ||

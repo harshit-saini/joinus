@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: InvitePageProps): Promise<Met
       title: "Invitation",
     };
   }
+}
 
   return {
     title: invite.title || `${invite.eventType} Invitation`,
