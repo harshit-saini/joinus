@@ -1,33 +1,59 @@
-// app/invite/[id]/page.tsx
-import dbConnect from '../../../lib/mongoose';
-import InviteModel from '../../../lib/models/invite'
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
+import InviteDisplay from "./InviteDisplay";
+import dbConnect from "../../../lib/mongoose";
+import Invite from "../../../lib/models/invite";
+import type { InvitePayload } from "../../../lib/invite-types";
 
-interface Props {
-  params: { id: string };
+type InvitePageProps = {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ guest?: string }>;
+};
+
+async function getInvite(id: string): Promise<InvitePayload | null> {
+  try {
+    await dbConnect();
+    const invite = await Invite.findOne({ publicToken: id }).lean();
+    if (!invite) {
+      return null;
+    }
+
+    return JSON.parse(JSON.stringify(invite)) as InvitePayload;
+  } catch {
+    return null;
+  }
 }
 
+export async function generateMetadata({ params }: InvitePageProps): Promise<Metadata> {
+  const { id } = await params;
+  const invite = await getInvite(id);
 
-export default async function InvitePage({ params }: Props) {
-  await dbConnect();
-  const doc = await InviteModel.findById(params.id).lean();
-
-
-  if (!doc) {
-    return <div>Invite not found</div>;
+  if (!invite) {
+    return {
+      title: "Invitation",
+    };
   }
 
+  return {
+    title: invite.title || `${invite.eventType} Invitation`,
+    description: invite.message || "You are invited.",
+  };
+}
 
-  return (
-    <div>
-      <h2>{doc.title || `${doc.eventType} Invitation`}</h2>
-      <p>{doc.message}</p>
-      {doc.date && <p>Date: {doc.date}</p>}
-      {doc.eventType === 'Wedding' && (
-        <p>
-          <strong>{doc.bride}</strong> &amp; <strong>{doc.groom}</strong>
-        </p>
-      )}
-    </div>
-  );
+export default async function InvitePage({ params, searchParams }: InvitePageProps) {
+  const { id } = await params;
+  const query = searchParams ? await searchParams : {};
+  const guestToken = typeof query.guest === "string" ? query.guest : "";
+  const invite = await getInvite(id);
+
+  if (!invite && id.startsWith("local_")) {
+    return <InviteDisplay invite={null} localInviteId={id} guestToken={guestToken} />;
+  }
+
+  if (!invite) {
+    notFound();
+  }
+
+  return <InviteDisplay invite={invite} guestToken={guestToken} />;
 }
