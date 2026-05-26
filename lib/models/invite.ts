@@ -16,7 +16,6 @@ export interface IInvite extends InviteDocument, Document {
 const MediaAssetSchema = new Schema(
   {
     id: { type: String, required: true },
-    token: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String, default: "" },
     size: { type: Number, default: 0 },
@@ -30,6 +29,7 @@ const MediaAssetSchema = new Schema(
 const GuestRecipientSchema = new Schema(
   {
     id: { type: String, required: true },
+    token: { type: String, required: true },
     name: { type: String, required: true },
     contact: { type: String, default: "" },
     channel: {

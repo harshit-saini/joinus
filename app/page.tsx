@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const workflow = [
   {
@@ -29,12 +28,6 @@ const events = [
 ];
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <main className="min-h-screen">
       <section className="border-b border-stone-300 bg-[#fffaf2]/85">

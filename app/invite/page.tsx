@@ -155,7 +155,7 @@ function fileToAsset(
 
 function normalizeSavedInvite(invite: SavedInvite): SavedInvite {
   const fallback = createInitialInvite();
-  const payload = {
+  const payload: InvitePayload = {
     ...fallback,
     ...(invite.payload || {}),
     gallery: Array.isArray(invite.payload?.gallery)
@@ -168,7 +168,10 @@ function normalizeSavedInvite(invite: SavedInvite): SavedInvite {
         }))
       : [],
     analytics: {
-      ...fallback.analytics,
+      openCount: fallback.analytics?.openCount || 0,
+      sentCount: fallback.analytics?.sentCount || 0,
+      rsvpYes: fallback.analytics?.rsvpYes || 0,
+      rsvpNo: fallback.analytics?.rsvpNo || 0,
       ...(invite.payload?.analytics || {}),
     },
   };

@@ -1,8 +1,5 @@
-const CACHE_NAME = "joinus-pwa-v1";
+const CACHE_NAME = "joinus-pwa-v2";
 const CORE_ASSETS = [
-  "/",
-  "/invite",
-  "/dashboard",
   "/offline.html",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
@@ -39,20 +36,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (requestUrl.pathname.startsWith("/_next/")) {
+    return;
+  }
+
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/offline.html")))
+        .then((response) => response)
+        .catch(() => caches.match("/offline.html"))
     );
     return;
   }
 
-  if (requestUrl.pathname.startsWith("/_next/") || requestUrl.pathname.startsWith("/icons/")) {
+  if (requestUrl.pathname.startsWith("/icons/") || requestUrl.pathname === "/manifest.webmanifest") {
     event.respondWith(
       caches.match(request).then((cached) => {
         return (
